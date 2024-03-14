@@ -23,3 +23,32 @@ export const signUp = asyncWrapper(
         res.status(201).json({ user, message: "User created successfully" });
     }
 );
+
+export const signIn = asyncWrapper(
+    async (
+        req: Request<
+            {},
+            { user: IUser; message: string }, // Response type
+            { email: string; password: string } // Request type
+        >,
+        res: Response
+    ) => {
+        const { email, password } = req.body;
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(401).json({ message: "Invalid credentials" });
+        }
+
+        const isMatch = await user.comparePassword(password);
+        if (!isMatch) {
+            return res.status(401).json({ message: "Invalid credentials" });
+        }
+
+        res.status(200).json({ user, message: "Sign in successful" });
+    }
+);
+
+export const signOut = asyncWrapper(async (req: Request, res: Response) => {
+    res.status(200).json({ message: "Sign out successful" });
+});
