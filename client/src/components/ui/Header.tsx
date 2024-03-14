@@ -1,6 +1,15 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate, useNavigation } from "react-router-dom";
 import { BsFacebook, BsInstagram, BsTwitter, BsPhone } from "react-icons/bs";
+import { useAppSelector } from "../../redux/store";
+import { useSignOutMutation } from "../../redux/auth/api";
 function Header() {
+    const { isAuthenticated } = useAppSelector((state) => state.auth);
+    const [signOut, { isLoading }] = useSignOutMutation();
+    const navigate = useNavigate();
+    const onSignOut = async () => {
+        await signOut({}).unwrap();
+        navigate("/auth/sign-in");
+    };
     return (
         <div className="container max-w-7xl mx-auto">
             <div className="flex flex-col gap-4 bg-zinc-900 text-white p-4 my-4 rounded-md">
@@ -58,9 +67,26 @@ function Header() {
                         </NavLink>
                     </div>
                     <div className="flex">
-                        <Link to="/auth/sign-in" className="btn btn-primary">
-                            Sign In
-                        </Link>
+                        {isAuthenticated ? (
+                            <div className="flex items-center gap-4">
+                                <Link
+                                    to="/dashboard/profile"
+                                    className="btn btn-primary"
+                                >
+                                    Profile
+                                </Link>
+                                <button onClick={onSignOut} className="btn">
+                                    Sign Out
+                                </button>
+                            </div>
+                        ) : (
+                            <Link
+                                to="/auth/sign-in"
+                                className="btn btn-primary"
+                            >
+                                Sign In
+                            </Link>
+                        )}
                     </div>
                 </div>
             </div>

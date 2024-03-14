@@ -59,5 +59,6 @@ export const signIn = asyncWrapper(
 );
 
 export const signOut = asyncWrapper(async (req: Request, res: Response) => {
+    res.clearCookie("access_token");
     res.status(200).json({ message: "Sign out successful" });
 });
