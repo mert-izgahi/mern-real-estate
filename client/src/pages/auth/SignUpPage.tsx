@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { signUpInputSchema } from "../../validations";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 
 function SignUpPage() {
     const {
@@ -20,8 +21,10 @@ function SignUpPage() {
         resolver: zodResolver(signUpInputSchema),
     });
 
-    function onSubmit(data: z.infer<typeof signUpInputSchema>) {
-        console.log(data);
+    async function onSubmit(data: z.infer<typeof signUpInputSchema>) {
+        const response = await axios.post("/api/auth/sign-up", data);
+        const result = await response.data;
+        console.log(result);
     }
 
     return (
