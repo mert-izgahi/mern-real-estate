@@ -4,8 +4,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInInputSchema } from "../../validations";
 import { z } from "zod";
+import toast from "react-hot-toast";
+import { useSignInMutation } from "../../redux/auth/api";
 
 function SignInPage() {
+    const [signIn, { isLoading }] = useSignInMutation();
     const {
         register,
         handleSubmit,
@@ -19,8 +22,13 @@ function SignInPage() {
         resolver: zodResolver(signInInputSchema),
     });
 
-    function onSubmit(data: z.infer<typeof signInInputSchema>) {
-        console.log(data);
+    async function onSubmit(data: z.infer<typeof signInInputSchema>) {
+        try {
+            await signIn(data).unwrap();
+            toast.success("Sign in successful");
+        } catch (error: any) {
+            toast.error(error?.message);
+        }
     }
 
     return (
@@ -52,8 +60,12 @@ function SignInPage() {
                         register={register}
                     />
 
-                    <button type="submit" className="btn btn-primary">
-                        Sign In
+                    <button
+                        disabled={isLoading}
+                        type="submit"
+                        className="btn btn-primary"
+                    >
+                        {isLoading ? "Loading..." : "Sign In"}
                     </button>
                 </form>
 
