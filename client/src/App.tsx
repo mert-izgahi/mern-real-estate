@@ -15,6 +15,10 @@ function App() {
     return (
         <>
             <Routes>
+                <Route path="auth" element={<AuthLayout />}>
+                    <Route path="sign-in" element={<SignInPage />} />
+                    <Route path="sign-up" element={<SignUpPage />} />
+                </Route>
                 <Route path="/" element={<Layout />}>
                     <Route index element={<HomePage />} />
                     <Route path="properties" element={<PropertiesPage />} />
@@ -22,29 +26,24 @@ function App() {
                         path="properties/:propertyId"
                         element={<SinglePropertyPage />}
                     />
-                </Route>
 
-                <Route path="/auth" element={<AuthLayout />}>
-                    <Route path="sign-in" element={<SignInPage />} />
-                    <Route path="sign-up" element={<SignUpPage />} />
-                </Route>
+                    <Route path="/dashboard" element={<DashboardLayout />}>
+                        <Route index element={<OverviewPage />} />
+                        <Route path="profile" element={<ProfilePage />} />
+                        <Route
+                            path="properties/:propertyId"
+                            element={<DashboardPropertiesPage />}
+                        />
+                        <Route
+                            path="properties/create"
+                            element={<CreatePropertyPage />}
+                        />
 
-                <Route path="/dashboard" element={<DashboardLayout />}>
-                    <Route index element={<OverviewPage />} />
-                    <Route path="profile" element={<ProfilePage />} />
-                    <Route
-                        path="properties/:propertyId"
-                        element={<DashboardPropertiesPage />}
-                    />
-                    <Route
-                        path="properties/create"
-                        element={<CreatePropertyPage />}
-                    />
-
-                    <Route
-                        path="properties/:propertyId/edit"
-                        element={<EditPropertyPage />}
-                    />
+                        <Route
+                            path="properties/:propertyId/edit"
+                            element={<EditPropertyPage />}
+                        />
+                    </Route>
                 </Route>
             </Routes>
         </>
