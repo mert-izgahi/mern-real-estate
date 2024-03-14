@@ -9,17 +9,14 @@ import {
     OverviewPage,
     ProfilePage,
 } from "./pages/dashboard";
-import { AuthLayout, SignInPage, SignUpPage } from "./pages/auth";
+import { SignInPage, SignUpPage, AuthLayout } from "./pages/auth";
 
 function App() {
     return (
         <>
             <Routes>
-                <Route path="auth" element={<AuthLayout />}>
-                    <Route path="sign-in" element={<SignInPage />} />
-                    <Route path="sign-up" element={<SignUpPage />} />
-                </Route>
                 <Route path="/" element={<Layout />}>
+                    {/* Root Routes */}
                     <Route index element={<HomePage />} />
                     <Route path="properties" element={<PropertiesPage />} />
                     <Route
@@ -27,6 +24,13 @@ function App() {
                         element={<SinglePropertyPage />}
                     />
 
+                    {/* Auth Routes */}
+                    <Route path="auth" element={<AuthLayout />}>
+                        <Route path="sign-in" element={<SignInPage />} />
+                        <Route path="sign-up" element={<SignUpPage />} />
+                    </Route>
+
+                    {/* Dashboard Routes */}
                     <Route path="/dashboard" element={<DashboardLayout />}>
                         <Route index element={<OverviewPage />} />
                         <Route path="profile" element={<ProfilePage />} />

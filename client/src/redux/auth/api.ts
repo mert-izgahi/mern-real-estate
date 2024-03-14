@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { IUser } from "../../types";
 import { z } from "zod";
 import { signInInputSchema, signUpInputSchema } from "../../validations";
-import authSlice, { setToken, setUser } from "./slice";
+import { setIsAuthenticated, setUser } from "./slice";
 
 export const authApi = createApi({
     reducerPath: "authApi",
@@ -51,6 +51,7 @@ export const authApi = createApi({
                 try {
                     const { data } = await queryFulfilled;
                     dispatch(setUser(data.user));
+                    dispatch(setIsAuthenticated(true));
                 } catch (error) {
                     console.log(error);
                 }
