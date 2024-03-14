@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { asyncWrapper } from "../middlewares/asyncWrapper";
 import User, { IUser } from "../models/User";
+import { createToken } from "../utils/jwt";
 
 export const signUp = asyncWrapper(
     async (
@@ -45,7 +46,15 @@ export const signIn = asyncWrapper(
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
-        res.status(200).json({ user, message: "Sign in successful" });
+        const token = await createToken({ id: user._id, name: user.name });
+
+        res.cookie("access_token", token, {
+            httpOnly: true,
+            maxAge: 24 * 60 * 60 * 1000,
+            expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        })
+            .status(200)
+            .json({ user, message: "Sign in successful" });
     }
 );
 
