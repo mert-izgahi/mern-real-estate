@@ -2,8 +2,9 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
+import fileUpload from "express-fileupload";
 import cookieParser from "cookie-parser";
-import { authRouter } from "./routers";
+import { authRouter, storageRouter } from "./routers";
 import errorHandler from "./middlewares/errorHandler";
 dotenv.config({ path: "./.env" });
 const allowedOrigins = ["http://localhost:3000", "http://localhost:5173"];
@@ -26,6 +27,15 @@ app.use(
     })
 );
 
+app.use(
+    fileUpload({
+        useTempFiles: true,
+        tempFileDir: "/tmp/",
+        createParentPath: true,
+        limits: { fileSize: 50 * 1024 * 1024, files: 3, parts: 3 },
+    })
+);
+
 // Connect to MongoDB
 const connectDB = async () => {
     try {
@@ -38,6 +48,7 @@ const connectDB = async () => {
 };
 
 app.use("/api/auth", authRouter);
+app.use("/api/storage", storageRouter);
 
 app.use(errorHandler);
 
