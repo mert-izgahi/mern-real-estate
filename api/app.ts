@@ -1,11 +1,11 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-
+import { authRouter } from "./routers";
 dotenv.config({ path: "./.env" });
 
 const app = express();
-
+app.use(express.json());
 // Connect to MongoDB
 const connectDB = async () => {
     try {
@@ -17,9 +17,7 @@ const connectDB = async () => {
     }
 };
 
-app.get("/", (req, res) => {
-    res.send("Hello World!");
-});
+app.use("/api/auth", authRouter);
 
 app.listen(3000, async () => {
     await connectDB();
