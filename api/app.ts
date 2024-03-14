@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import { authRouter } from "./routers";
+import errorHandler from "./middlewares/errorHandler";
 dotenv.config({ path: "./.env" });
 
 const app = express();
@@ -18,6 +19,8 @@ const connectDB = async () => {
 };
 
 app.use("/api/auth", authRouter);
+
+app.use(errorHandler);
 
 app.listen(3000, async () => {
     await connectDB();
