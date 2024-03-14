@@ -5,6 +5,7 @@ import { z } from "zod";
 import { signUpInputSchema } from "../../validations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import FormContainer from "../../components/forms/FormContainer";
 
 function SignUpPage() {
     const {
@@ -32,7 +33,7 @@ function SignUpPage() {
             <div className="flex items-center justify-center mb-12">
                 <h1 className="text-3xl">SignIn to your account</h1>
             </div>
-            <div className="max-w-md mx-auto bg-zinc-200 p-8 rounded-md">
+            <FormContainer>
                 <form
                     className="flex flex-col gap-4 mb-8"
                     onSubmit={handleSubmit(onSubmit)}
@@ -75,7 +76,7 @@ function SignUpPage() {
                         Sign In
                     </Link>
                 </div>
-            </div>
+            </FormContainer>
         </div>
     );
 }

@@ -1,13 +1,19 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { IUser } from "../../types";
 import { z } from "zod";
-import { signInInputSchema, signUpInputSchema } from "../../validations";
+import {
+    profileInputSchema,
+    signInInputSchema,
+    signUpInputSchema,
+} from "../../validations";
 import { setIsAuthenticated, setUser } from "./slice";
 
 export const authApi = createApi({
     reducerPath: "authApi",
     baseQuery: fetchBaseQuery({
         baseUrl: "http://localhost:3000/api",
+        credentials: "include",
+        mode: "cors",
     }),
     endpoints: (builder) => ({
         signUp: builder.mutation({
@@ -73,8 +79,61 @@ export const authApi = createApi({
                 }
             },
         }),
+
+        updateMe: builder.mutation({
+            query: (body: z.infer<typeof profileInputSchema>) => ({
+                url: "/auth/update-me",
+                method: "PUT",
+                body,
+            }),
+
+            transformResponse: (response: { user: IUser }) => {
+                return {
+                    user: response.user,
+                };
+            },
+
+            transformErrorResponse: (response: any) => {
+                return response.data;
+            },
+
+            onQueryStarted: async (
+                body: z.infer<typeof signUpInputSchema>,
+
+                { dispatch, queryFulfilled }
+            ) => {
+                try {
+                    const { data } = await queryFulfilled;
+                    dispatch(setUser(data.user));
+                } catch (error) {
+                    console.log(error);
+                }
+            },
+        }),
+
+        deleteMe: builder.mutation({
+            query: () => ({
+                url: "/auth/delete-me",
+                method: "DELETE",
+            }),
+
+            onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
+                try {
+                    await queryFulfilled;
+                    dispatch(setUser(null));
+                    dispatch(setIsAuthenticated(false));
+                } catch (error) {
+                    console.log(error);
+                }
+            },
+        }),
     }),
 });
 
-export const { useSignUpMutation, useSignInMutation, useSignOutMutation } =
-    authApi;
+export const {
+    useSignUpMutation,
+    useSignInMutation,
+    useSignOutMutation,
+    useUpdateMeMutation,
+    useDeleteMeMutation,
+} = authApi;

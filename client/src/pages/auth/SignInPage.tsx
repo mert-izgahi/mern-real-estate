@@ -6,6 +6,7 @@ import { signInInputSchema } from "../../validations";
 import { z } from "zod";
 import toast from "react-hot-toast";
 import { useSignInMutation } from "../../redux/auth/api";
+import FormContainer from "../../components/forms/FormContainer";
 
 function SignInPage() {
     const [signIn, { isLoading }] = useSignInMutation();
@@ -36,7 +37,7 @@ function SignInPage() {
             <div className="flex items-center justify-center mb-12">
                 <h1 className="text-3xl">SignIn to your account</h1>
             </div>
-            <div className="max-w-md mx-auto bg-zinc-200 p-8 rounded-md">
+            <FormContainer>
                 <form
                     className="flex flex-col gap-4 mb-8"
                     onSubmit={handleSubmit(onSubmit)}
@@ -75,7 +76,7 @@ function SignInPage() {
                         Sign Up
                     </Link>
                 </div>
-            </div>
+            </FormContainer>
         </div>
     );
 }

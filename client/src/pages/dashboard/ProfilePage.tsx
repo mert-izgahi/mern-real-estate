@@ -1,7 +1,12 @@
 import React from "react";
+import ProfileForm from "../../components/forms/ProfileForm";
 
 function ProfilePage() {
-    return <div>ProfilePage</div>;
+    return (
+        <div>
+            <ProfileForm />
+        </div>
+    );
 }
 
 export default ProfilePage;

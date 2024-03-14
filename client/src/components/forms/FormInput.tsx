@@ -13,6 +13,25 @@ function FormInput({
     error?: string;
     register: any;
 }) {
+    if (type === "textarea") {
+        return (
+            <div>
+                {label && (
+                    <label htmlFor="email" className="block mb-2">
+                        {label}
+                    </label>
+                )}
+                <textarea
+                    id={id}
+                    name={id}
+                    placeholder={placeholder}
+                    className="w-full py-2 px-4 border border-zinc-300 rounded-md focus:outline-none focus:border-zinc-500"
+                    {...register(id)}
+                />
+                {error && <p className="text-red-500 text-sm">{error}</p>}
+            </div>
+        );
+    }
     return (
         <div>
             {label && (

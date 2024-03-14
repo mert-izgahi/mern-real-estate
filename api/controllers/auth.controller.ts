@@ -62,3 +62,59 @@ export const signOut = asyncWrapper(async (req: Request, res: Response) => {
     res.clearCookie("access_token");
     res.status(200).json({ message: "Sign out successful" });
 });
+
+export const getMe = asyncWrapper(async (req: Request, res: Response) => {
+    const currentUser = res.locals.user;
+
+    if (!currentUser) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const { id } = currentUser;
+
+    const user = await User.findById(id);
+
+    return res.status(200).json({ user, message: "User fetched successfully" });
+});
+
+export const updateMe = asyncWrapper(async (req: Request, res: Response) => {
+    const currentUser = res.locals.user;
+
+    if (!currentUser) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const { id } = currentUser;
+
+    const user = await User.findByIdAndUpdate(
+        id,
+        {
+            name: req.body.name,
+            bio: req.body.bio,
+        },
+        {
+            new: true,
+        }
+    );
+
+    if (req.body.password) {
+        user.password = req.body.password;
+        await user.save();
+    }
+
+    res.status(200).json({ user, message: "User updated successfully" });
+});
+
+export const deleteMe = asyncWrapper(async (req: Request, res: Response) => {
+    const currentUser = res.locals.user;
+
+    if (!currentUser) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const { id } = currentUser;
+
+    await User.findByIdAndDelete(id);
+
+    res.status(200).json({ message: "User deleted successfully" });
+});
